@@ -50,123 +50,76 @@ public class BookService {
 
     // create book
     public ResponseEntity<?> createBook(BookRequest request) {
-
+        if (Objects.isNull(request.getName())) {
+            log.warn("[book] name is null! {}", request);
+            return Response.error(ResponseCode.INVALID_BOOK_NAME);
+        }
+        if (Objects.isNull(request.getContent())) {
+            log.warn("[book] content is null! {} ", request);
+            return Response.error(ResponseCode.INVALID_BOOK_CONTENT);
+        }
+        if (Objects.isNull(request.getPrice())) {
+            log.warn("[book] price is null! {}", request);
+            return Response.error(ResponseCode.INVALID_BOOK_PRICE);
+        }
 
         if (Objects.isNull(request.getType())) {
-            log.debug("[book] type is null!");
-            return Response.error(ResponseCode.INVALID_REQUEST);
+            log.warn("[book] type is null! {} ", request);
+            return Response.error(ResponseCode.INVALID_BOOK_TYPE);
         }
 
         if (Objects.isNull(request.getSynopsis())) {
-            log.debug("[book] synopsis is null!");
-            return Response.error(ResponseCode.INVALID_REQUEST);
+            log.warn("[book] synopsis is null! {} ", request);
+            return Response.error(ResponseCode.INVALID_BOOK_SYNOPSIS);
         }
 
         // save to entity
         Book entity = new Book();
+        entity.setName(request.getName());
         entity.setType(request.getType());
         entity.setSynopsis(request.getSynopsis());
-
+        entity.setContent(request.getContent());
+        entity.setPrice(request.getPrice());
         // save to db
         Book bookRes = bookRepository.save(entity);
 
         //  response
         BookResponse response = BookResponse.builder()
+                .id(bookRes.getId())
                 .name(bookRes.getName())
                 .type(bookRes.getType())
                 .synopsis(bookRes.getSynopsis())
+                .content(bookRes.getContent())
+                .price(bookRes.getPrice())
                 .build();
 
         return Response.success(response);
     }
 
 
-    //upload image
-    public ResponseEntity<?> uploadImage(MultipartFile file) throws IOException {
-        // validate file
-        if (file == null) {
-            log.debug("[book] file is null!::{}", file);
-            return Response.error(ResponseCode.INVALID_IMAGE);
-        }
-        if (file.getSize() > 1048576 * 2) {
-            log.debug("[book] file size is max size::{}", file.getSize());
-            return Response.error(ResponseCode.MAX_IMAGE_SIZE);
-        }
-
-        String contentType = file.getContentType();
-        if (contentType == null) {
-            log.debug("[book] contentType is null!::{}", contentType);
-            return Response.error(ResponseCode.INVALID_IMAGE_TYPE);
-        }
-
-        List<String> supportType = Arrays.asList("image/png");
-        log.info("supportType {}", supportType);
-        if (!supportType.contains(contentType)) {
-            log.info("[book] contentType is not support!::{}", contentType);
-            return Response.error(ResponseCode.INVALID_IMAGE_TYPE);
-        }
-
-        try {
-            if (file.isEmpty()) {
-                return Response.error(ResponseCode.INVALID_IMAGE);
-            }
-            String fileName = file.getOriginalFilename();
-
-            String uploadDir = "C:/img/";
-            File directory = new File(uploadDir);
-            if (!directory.exists()) {
-                directory.mkdirs();
-            }
-            String filePath = uploadDir + fileName;
-            // Transfer the file to the specified path
-            file.transferTo(new File(filePath));
-
-            Book entity = new Book();
-            entity.setName(fileName.replace(".jpg", ""));
-            entity.setImageName(fileName);
-
-            Book book = bookRepository.save(entity);
-
-            // response
-            BookResponse response = BookResponse.builder()
-                    .id(book.getId())
-                    .name(book.getName())
-                    .imageName(book.getImageName())
-                    .build();
-
-            return Response.success(response);
-
-        } catch (IOException e) {
-            return Response.error(ResponseCode.INVALID_IMAGE);
-        }
-    }
-
-    //find bookImg
-    public ResponseEntity<?> findImag(String imgName) {
-        try {
-            String imagePath = "C:/img/" + imgName;
-            Resource image = new UrlResource("file:" + imagePath);
-
-            if (image.exists()) {
-                return ResponseEntity.ok()
-                        .contentType(MediaType.IMAGE_PNG) // or the appropriate content type for your images
-                        .body(image);
-            } else {
-                return ResponseEntity.notFound().build();
-            }
-        } catch (MalformedURLException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
     //find all book
     public ResponseEntity<?> getAll(Pagination pagination) {
-
         Pageable paginate = Comm.getPaginate(pagination);
         Page<Book> page = bookRepository.findBookBy(paginate);
-
-        return Response.successList(bookResponsePage(page,paginate));
+        return Response.successList(page);
     }
+
+    public ResponseEntity<?> getAllOrderById(Pagination pagination) {
+        Pageable paginate = Comm.getPaginate(pagination);
+        Page<Book> page = bookRepository.findAllByOrderByIdDesc(paginate);
+        return Response.successList(page);
+    }
+
+    public ResponseEntity<?>getAllByType(String type,Pagination pagination){
+        if (Objects.isNull(type)) {
+            log.info("[book] bookType is null! {}", type);
+            return Response.error(ResponseCode.INVALID_BOOK_TYPE);
+        }
+        Pageable paginate = Comm.getPaginate(pagination);
+        Page<Book> page = bookRepository.findAllByType(type,paginate);
+        return Response.successList(page);
+    }
+
 
     public ResponseEntity<?> updateBookDetail(Long id, BookRequest request) {
 
@@ -237,21 +190,21 @@ public class BookService {
     }
 
 
-
-
     public static BookResponse response(Book book) {
         return BookResponse.builder()
                 .id(book.getId())
                 .name(book.getName())
                 .type(book.getType())
                 .synopsis(book.getSynopsis())
+                .content(book.getContent())
+                .price(book.getPrice())
                 .imageName(book.getImageName())
                 .build();
     }
 
-    public static Page<BookResponse> bookResponsePage(Page<Book> data, Pageable pageable){
-        return data.stream().map(e -> response(e)).collect(Collectors.collectingAndThen(Collectors.toList(),list -> new PageImpl<>(list,pageable,list.size())));
-    }
+    public static Page<BookResponse> bookResponsePage(Page<Book> data, Pageable pageable) {
+        return data.stream().map(e -> response(e)).collect(Collectors.collectingAndThen(Collectors.toList(), list -> new PageImpl<>(list, pageable, list.size())));
+}
 
 
 }

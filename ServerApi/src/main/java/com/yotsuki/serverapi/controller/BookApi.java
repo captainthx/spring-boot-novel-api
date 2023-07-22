@@ -27,14 +27,10 @@ public class BookApi {
 
 
     @PostMapping
-    public ResponseEntity<?> signupBook(@RequestBody BookRequest request) {
+    public ResponseEntity<?> createBook(@RequestBody BookRequest request) {
         return bookService.createBook(request);
     }
 
-    @PostMapping("/uploadImage")
-    public ResponseEntity<?> uploadImg(@RequestParam MultipartFile file) throws IOException {
-        return bookService.uploadImage(file);
-    }
 
     @PostMapping("/favorite")
     public ResponseEntity<?> addFavorite(@RequestBody FavoriteRequest request) {
@@ -56,11 +52,6 @@ public class BookApi {
     public ResponseEntity<?> findByUserId(@AuthenticationPrincipal UserDetailsImp userDetailsImp){
         return null;
     }
-
-
-//    @GetMapping("/img/{fileName}")
-//    public ResponseEntity<?> find ag(fileName);
-//    }
 
 
     @PatchMapping("/{id}")

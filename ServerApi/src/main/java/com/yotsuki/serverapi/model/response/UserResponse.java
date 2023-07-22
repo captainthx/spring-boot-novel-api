@@ -1,5 +1,6 @@
 package com.yotsuki.serverapi.model.response;
 
+import com.yotsuki.serverapi.entity.Address;
 import com.yotsuki.serverapi.entity.Favorite;
 import lombok.Builder;
 import lombok.Data;
@@ -12,4 +13,5 @@ import java.util.List;
     private Long id;
     private String username;
     private String email;
+    private List<Address> addresses;
 }

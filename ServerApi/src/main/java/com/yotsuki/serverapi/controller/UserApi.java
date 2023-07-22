@@ -1,12 +1,12 @@
 package com.yotsuki.serverapi.controller;
 
+import com.yotsuki.boot.configJwt.UserDetailsImp;
+import com.yotsuki.serverapi.model.request.AddressRequest;
 import com.yotsuki.serverapi.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/v1/users")
@@ -26,5 +26,10 @@ private final UserService userService;
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable Long id){
         return userService.findById(id);
+    }
+
+    @PostMapping("/address")
+    public ResponseEntity<?> createAddress(@AuthenticationPrincipal UserDetailsImp userDetailsImp, @RequestBody AddressRequest request){
+        return userService.createAddress(userDetailsImp,request);
     }
 }

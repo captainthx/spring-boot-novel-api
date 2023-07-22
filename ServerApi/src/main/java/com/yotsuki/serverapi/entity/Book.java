@@ -9,11 +9,12 @@ import java.io.Serializable;
 @EqualsAndHashCode(callSuper = true)
 @Entity(name ="book" )
 @Data
-
 public class Book extends BaseEntity  {
     private String name;
     private String type;
     private String synopsis;
+    private String content;
+    private Long price;
     private String imageName;
 
 }

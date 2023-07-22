@@ -11,5 +11,7 @@ public class BookResponse  {
     private String name;
     private String type;
     private String synopsis;
+    private String content;
+    private Long price;
     private String imageName;
 }

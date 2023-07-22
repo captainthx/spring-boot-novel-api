@@ -31,7 +31,7 @@ private final CustomUserDetailService userDetailService;
 private final AuthenticationConfiguration authConfiguration;
     private final String [] WHITELIST ={
             "/v1/auth/**",
-            "/v1/img/**"
+            "/v1/global/**"
     };
 
    public webConfig(AuthEntryPointJwt authEntryPointJwt, CustomUserDetailService userDetailService, AuthenticationConfiguration authConfiguration) {

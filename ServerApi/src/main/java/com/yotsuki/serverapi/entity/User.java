@@ -18,7 +18,7 @@ import java.util.List;
 @Data
 
 public class User extends BaseEntity {
-    @Column(unique = true,nullable = false)
+    @Column(unique = true, nullable = false)
     private String username;
     @Column(nullable = false)
     private String email;
@@ -29,6 +29,9 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user")
     @ToString.Exclude
     private List<Favorite> favorites;
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, orphanRemoval = true)
+    private List<Address> addresses;
 
 
 }

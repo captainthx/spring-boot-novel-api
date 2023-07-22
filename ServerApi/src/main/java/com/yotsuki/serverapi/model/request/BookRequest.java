@@ -11,6 +11,9 @@ import javax.persistence.*;
 
 @Data
 public class BookRequest {
+    private String name;
     private String type;
     private String synopsis;
+    private String content;
+    private Long price;
 }

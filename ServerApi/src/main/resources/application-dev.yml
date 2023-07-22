@@ -3,9 +3,9 @@ spring:
     allow-circular-references: true
 
   datasource:
-    url: jdbc:mysql://localhost:3308/test_app?useUnicode=yes&characterEncoding=UTF-8
+    url: jdbc:mysql://45.144.167.216:3306/db_novel_shop?useUnicode=yes&characterEncoding=UTF-8
     username: root
-    password: 12345
+    password: Su%dhQ&wYFx*V8K%
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     show-sql: true

@@ -4,7 +4,6 @@ import com.yotsuki.boot.configJwt.UserDetailsImp;
 import com.yotsuki.boot.configJwt.model.Authentication;
 import com.yotsuki.serverapi.entity.User;
 import com.yotsuki.serverapi.repository.UserRepository;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
