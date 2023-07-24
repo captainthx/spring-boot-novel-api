@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 @Builder
 public class OrderResponse {
-    private Long userId;
+    private Long uid;
     private Long bookId;
     private String name;
     private Long price;

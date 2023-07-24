@@ -32,11 +32,6 @@ public class BookApi {
     }
 
 
-    @PostMapping("/favorite")
-    public ResponseEntity<?> addFavorite(@RequestBody FavoriteRequest request) {
-        return bookService.createFavorite(request);
-    }
-
     @GetMapping
     public ResponseEntity<?> findAll( Pagination pagination) {
         return bookService.getAll(pagination);

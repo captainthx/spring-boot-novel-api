@@ -9,7 +9,6 @@ import com.yotsuki.serverapi.model.request.AddressRequest;
 import com.yotsuki.serverapi.model.response.AddressResponse;
 import com.yotsuki.serverapi.model.response.UserResponse;
 import com.yotsuki.serverapi.repository.AddressRepository;
-import com.yotsuki.serverapi.repository.FavoriteRepository;
 import com.yotsuki.serverapi.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -24,12 +23,10 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final FavoriteRepository favRepository;
     private final AddressRepository addressRepository;
 
-    public UserService(UserRepository userRepository, FavoriteRepository favRepository, AddressRepository addressRepository) {
+    public UserService(UserRepository userRepository, AddressRepository addressRepository) {
         this.userRepository = userRepository;
-        this.favRepository = favRepository;
         this.addressRepository = addressRepository;
     }
 

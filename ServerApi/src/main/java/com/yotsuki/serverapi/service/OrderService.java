@@ -45,7 +45,6 @@ public class OrderService {
 
         //save to entity
         Order entity = new Order();
-        entity.setUserId(userDetailsImp.getId());
         entity.setBookId(request.getBookId());
         entity.setName(request.getName());
         entity.setPrice(request.getPrice());
@@ -62,7 +61,7 @@ public class OrderService {
 
     public OrderResponse response(Order order) {
         return OrderResponse.builder()
-                .userId(order.getUserId())
+                .uid(order.getUid())
                 .bookId(order.getBookId())
                 .name(order.getName())
                 .price(order.getPrice())

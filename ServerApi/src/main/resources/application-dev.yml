@@ -1,7 +1,6 @@
 spring:
   main:
     allow-circular-references: true
-
   datasource:
     url: jdbc:mysql://45.144.167.216:3306/db_novel_shop?useUnicode=yes&characterEncoding=UTF-8
     username: root
@@ -20,10 +19,12 @@ spring:
 boot:
   jwt:
     issuer: yotsuki
-    expirationMs: 30000000
+    expirationMs: 18748800000
     private-key: classpath:certs/private.pem
     public-key: classpath:certs/public.pem
 
 logging:
   level:
     org.springframework.web: DEBUG
+server:
+  port: 8080

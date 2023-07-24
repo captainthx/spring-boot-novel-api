@@ -5,30 +5,17 @@ import com.yotsuki.excommon.common.ResponseCode;
 import com.yotsuki.excommon.model.Pagination;
 import com.yotsuki.excommon.utils.Comm;
 import com.yotsuki.serverapi.entity.Book;
-import com.yotsuki.serverapi.entity.Favorite;
-import com.yotsuki.serverapi.entity.User;
 import com.yotsuki.serverapi.model.request.BookRequest;
-import com.yotsuki.serverapi.model.request.FavoriteRequest;
 import com.yotsuki.serverapi.model.response.BookResponse;
 import com.yotsuki.serverapi.repository.BookRepository;
-import com.yotsuki.serverapi.repository.FavoriteRepository;
 import com.yotsuki.serverapi.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -39,12 +26,11 @@ public class BookService {
 
     private final BookRepository bookRepository;
     private final UserRepository userRepository;
-    private final FavoriteRepository favoriteRepository;
 
-    public BookService(BookRepository bookRepository, UserRepository userRepository, FavoriteRepository favoriteRepository) {
+
+    public BookService(BookRepository bookRepository, UserRepository userRepository) {
         this.bookRepository = bookRepository;
         this.userRepository = userRepository;
-        this.favoriteRepository = favoriteRepository;
     }
 
 
@@ -149,28 +135,6 @@ public class BookService {
         return Response.success(response(res));
     }
 
-    public ResponseEntity<?> createFavorite(FavoriteRequest request) {
-        if (Objects.isNull(request.getBookId())) {
-            log.info("[book]  bookId is null! {}", request);
-            return Response.error(ResponseCode.INVALID_BOOK_ID);
-        }
-        if (Objects.isNull(request.getUserId())) {
-            log.info("[book] userId is null! {}", request);
-            return Response.error(ResponseCode.INVALID_UID);
-        }
-
-        Optional<User> opt = userRepository.findById(request.getUserId());
-        if (!opt.isPresent()) {
-            log.info("[book] notFound data User {}", opt);
-            return Response.error(ResponseCode.NOT_FOUND);
-        }
-        User user = opt.get();
-        Favorite entity = new Favorite();
-        entity.setBookId(request.getBookId());
-        entity.setUser(user);
-
-        return Response.success(favoriteRepository.save(entity));
-    }
 
 
     public ResponseEntity<?> getAllById(Long id) {

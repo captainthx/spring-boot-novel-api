@@ -25,13 +25,16 @@ public class User extends BaseEntity {
     @JsonIgnore
     @Column(nullable = false)
     private String password;
+
     @JsonIgnore
-    @OneToMany(mappedBy = "user")
-    @ToString.Exclude
-    private List<Favorite> favorites;
-    @JsonIgnore
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<Address> addresses;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<Order> orders;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<HistoryLogin> historyLogins;
 }
