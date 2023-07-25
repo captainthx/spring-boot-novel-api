@@ -14,9 +14,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -38,22 +40,9 @@ public class UserService {
 
 
     // findbyId
-    public ResponseEntity<?> findById(Long id) {
-        if (!userRepository.existsById(id)) {
-            log.warn("[user] id notFound! {}", id);
-            return Response.error(ResponseCode.NOT_FOUND);
-        }
-
-        Optional<User> opt = userRepository.findById(id);
-
-        if (!opt.isPresent()) {
-            log.warn("[user] user notFoud! {}", opt);
-            return Response.error(ResponseCode.NOT_FOUND);
-        }
-        User user = opt.get();
-         List<Address> addressList = addressRepository.findByUser(user);
-        // response
-        return Response.success(userResponse(user,addressList));
+    public ResponseEntity<?> findById(UserDetailsImp userDetailsImp){
+        User userOpt = this.userRepository.findById(userDetailsImp.getId()).get();
+        return Response.success(userResponse(userOpt));
     }
 
 
@@ -63,44 +52,56 @@ public class UserService {
             return Response.error(ResponseCode.INVALID_ADDRESS_LINE);
         }
         if (Objects.isNull(request.getLine2())) {
-            log.warn("[user] address is null! {}", request);
+            log.warn("user::(block) address is null! {}", request);
             return Response.error(ResponseCode.INVALID_ADDRESS_LINE);
         }
         if (Objects.isNull(request.getZipCode())) {
-            log.warn("[user] address zipcode is null! {}", request);
+            log.warn("user::(block) address zipcode is null! {}", request);
             return Response.error(ResponseCode.INVALID_ADDRESS_ZIPCODE);
         }
 
-        User userOptional = userRepository.findById(userDetailsImp.getId()).get();
-        Address entity = new Address();
+        long record =  this.addressRepository.countByUid(userDetailsImp.getId());
+        log.info("record {}",record);
+        if (record  == 3){
+            log.warn("user::(block) address is full! {}", request);
+            return Response.error(ResponseCode.ADDRESS_FULL);
+        }
 
+        User userOptional = this.userRepository.findById(userDetailsImp.getId()).get();
+        Address entity = new Address();
         //save to entity
         entity.setUser(userOptional);
         entity.setLine1(request.getLine1());
         entity.setLine2(request.getLine2());
         entity.setZipCode(request.getZipCode());
 
-        Address addressRes = addressRepository.save(entity);
+        Address addressRes = this.addressRepository.save(entity);
 
         return Response.success(addressResponse(addressRes));
     }
 
+    public ResponseEntity<?> findAddressByUid(UserDetailsImp userDetailsImp){
+        List<AddressResponse> addressList = this.addressRepository.findByUid(userDetailsImp.getId())
+                .stream().map(this::addressResponse).collect(Collectors.toList());
 
-    public UserResponse userResponse(User user,List<Address> address) {
+        return Response.success(addressList);
+    }
+
+
+    public UserResponse userResponse(User user) {
         return UserResponse.builder()
                 .id(user.getId())
                 .username(user.getUsername())
                 .email(user.getEmail())
-                .addresses(address)
                 .build();
     }
 
     public AddressResponse addressResponse(Address address) {
         return AddressResponse.builder()
+                .id(address.getId())
                 .line1(address.getLine1())
                 .line2(address.getLine2())
                 .zipCode(address.getZipCode())
-                .user(address.getUser())
                 .build();
     }
 }

@@ -45,7 +45,7 @@ public class Response {
                 .code(code.getValue())
                 .text(code)
                 .build();
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     public static ResponseEntity<?> unauthorized() {

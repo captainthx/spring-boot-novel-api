@@ -12,5 +12,4 @@ import java.util.List;
     private Long id;
     private String username;
     private String email;
-    private List<Address> addresses;
 }
