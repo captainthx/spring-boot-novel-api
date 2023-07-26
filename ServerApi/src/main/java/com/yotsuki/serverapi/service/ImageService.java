@@ -30,7 +30,7 @@ import java.util.Optional;
 public class ImageService {
 
     private final BookRepository bookRepository;
-    private final String imgPath = "/api/img/" ;
+    private final String imgPath = "/npm/api/img/" ;
 
     public ImageService( BookRepository bookRepository) {
         this.bookRepository = bookRepository;
@@ -96,6 +96,7 @@ public class ImageService {
                 .type(book.getType())
                 .synopsis(book.getSynopsis())
                 .content(book.getContent())
+                .price(book.getPrice())
                 .imageName(book.getImageName())
                 .build();
 

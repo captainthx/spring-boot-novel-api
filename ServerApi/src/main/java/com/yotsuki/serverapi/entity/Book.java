@@ -12,7 +12,9 @@ import java.io.Serializable;
 public class Book extends BaseEntity  {
     private String name;
     private String type;
+    @Lob
     private String synopsis;
+    @Lob
     private String content;
     private Long price;
     private String imageName;

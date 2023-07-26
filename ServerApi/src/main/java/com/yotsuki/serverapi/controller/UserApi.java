@@ -26,13 +26,7 @@ public class UserApi {
         return userService.findById(userDetailsImp);
     }
 
-    @GetMapping("/address")
-    public ResponseEntity<?> getAddressByUid(@AuthenticationPrincipal UserDetailsImp userDetailsImp){
-        return userService.findAddressByUid(userDetailsImp);
-    }
 
-    @PostMapping("/address")
-    public ResponseEntity<?> createAddress(@AuthenticationPrincipal UserDetailsImp userDetailsImp, @RequestBody AddressRequest request){
-        return userService.createAddress(userDetailsImp,request);
-    }
+
+
 }

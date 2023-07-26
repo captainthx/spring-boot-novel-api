@@ -94,30 +94,30 @@ public class AuthService {
         String device = Comm.getDeviceType(userAgent);
 
         if (ValidateUtil.invalidUsername(request.getUsername())) {
-            log.debug("[login] validate username fail!");
+            log.debug("login::(block) validate username fail!");
             return Response.error(ResponseCode.INVALID_USERNAME);
         }
 
         if (ValidateUtil.invalidPassword(request.getPassword())) {
-            log.debug("[login] validate password fail!");
+            log.debug("login::(block) validate password fail!");
             return Response.error(ResponseCode.INVALID_USERNAME_PASSWORD);
         }
         // check in db
         Optional<User> opt = userRepository.findByUsername(request.getUsername());
 
         if (!opt.isPresent()) {
-            log.debug("[login]  user notFound!");
+            log.debug("login::(block)  user notFound!");
             return Response.error(ResponseCode.INVALID_USERNAME);
         }
         User user = opt.get();
         // validate password
         if (!MatchPassword(request.getPassword(), user.getPassword())) {
-            log.debug("[login] validate password fail!");
+            log.debug("login::(block) validate password fail!");
             return Response.error(ResponseCode.INVALID_USERNAME_PASSWORD);
         }
         //save loginLog
         HistoryLogin loginLog = new HistoryLogin();
-        loginLog.setUid(user.getId());
+        loginLog.setUser(user);
         loginLog.setIpv4(ipv4);
         loginLog.setDevice(device);
         loginLog.setUserAgent(userAgent);
