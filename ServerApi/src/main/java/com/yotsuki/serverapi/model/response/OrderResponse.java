@@ -6,9 +6,9 @@ import lombok.Data;
 @Data
 @Builder
 public class OrderResponse {
-    private Long uid;
     private Long bookId;
     private String name;
+    private Integer quantity;
     private Long price;
     private String status;
 }

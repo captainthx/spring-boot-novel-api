@@ -5,10 +5,7 @@ import com.yotsuki.serverapi.model.request.OrderRequest;
 import com.yotsuki.serverapi.service.OrderService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.PublicKey;
 
@@ -27,6 +24,14 @@ public class OrderApi {
     public ResponseEntity<?> create(@AuthenticationPrincipal UserDetailsImp userDetailsImp, @RequestBody OrderRequest request){
         return orderService.create(userDetailsImp,request);
     }
+
+
+    @GetMapping("/{status}")
+    public ResponseEntity<?> findOrderByUid(@AuthenticationPrincipal UserDetailsImp userDetailsImp,@PathVariable String status){
+        return orderService.getOrderByUid(userDetailsImp,status);
+    }
+
+
 
     // update order
     public ResponseEntity<?> updateOrder(){
