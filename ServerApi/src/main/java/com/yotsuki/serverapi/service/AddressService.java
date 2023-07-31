@@ -8,7 +8,6 @@ import com.yotsuki.serverapi.entity.User;
 import com.yotsuki.serverapi.model.request.AddressRequest;
 import com.yotsuki.serverapi.model.response.AddressResponse;
 import com.yotsuki.serverapi.repository.AddressRepository;
-import com.yotsuki.serverapi.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -22,13 +21,16 @@ import java.util.stream.Collectors;
 public class AddressService {
 
     private final AddressRepository addressRepository;
-    private final UserRepository userRepository;
 
-    public AddressService(AddressRepository addressRepository, UserRepository userRepository) {
+    public AddressService(AddressRepository addressRepository) {
         this.addressRepository = addressRepository;
-        this.userRepository = userRepository;
     }
 
+    /**
+     * @param userDetailsImp
+     * @param request
+     * @return
+     */
     public ResponseEntity<?> createAddress(UserDetailsImp userDetailsImp, AddressRequest request) {
         if (Objects.isNull(request.getLine1())) {
             log.warn("address::(block) address is null! {}", request);
@@ -48,10 +50,11 @@ public class AddressService {
             log.warn("address::(block) address is full! {}", request);
             return Response.error(ResponseCode.ADDRESS_FULL);
         }
-
-        User userOptional = this.userRepository.findById(userDetailsImp.getId()).get();
-        Address entity = new Address();
+        //set foreign key
+        User userOptional = new User();
+        userOptional.setId(userDetailsImp.getId());
         //save to entity
+        Address entity = new Address();
         entity.setUser(userOptional);
         entity.setLine1(request.getLine1());
         entity.setLine2(request.getLine2());
@@ -62,6 +65,11 @@ public class AddressService {
         return Response.success(addressResponse(addressRes));
     }
 
+
+    /**
+     * @param userDetailsImp user details
+     * @return response
+     */
     public ResponseEntity<?> findAddressByUid(UserDetailsImp userDetailsImp){
         List<AddressResponse> addressList = this.addressRepository.findByUid(userDetailsImp.getId())
                 .stream().map(this::addressResponse).collect(Collectors.toList());

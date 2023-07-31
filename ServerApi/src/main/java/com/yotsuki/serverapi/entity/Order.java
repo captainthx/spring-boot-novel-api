@@ -13,6 +13,8 @@ public class Order extends BaseEntity {
     private String name;
     private Long price;
     private Integer quantity;
+    @Lob
+    private String address;
     private String status;
 
     @ManyToOne(fetch = FetchType.LAZY)

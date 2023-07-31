@@ -16,10 +16,10 @@ public class UserApi {
         this.userService = userService;
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<?> findAll(){
-        return userService.findAll();
-    }
+//    @GetMapping("/all")
+//    public ResponseEntity<?> findAll(){
+//        return userService.findAll();
+//    }
 
     @GetMapping()
     public ResponseEntity<?> findByUid(@AuthenticationPrincipal UserDetailsImp userDetailsImp){

@@ -34,6 +34,10 @@ public class BookService {
     }
 
 
+    /**
+     * @param request bookRequest
+     * @return ResponseEntity<?>
+     */
     // create book
     public ResponseEntity<?> createBook(BookRequest request) {
         if (Objects.isNull(request.getName())) {
@@ -83,6 +87,10 @@ public class BookService {
     }
 
 
+    /**
+     * @param pagination pagination
+     * @return ResponseEntity<?>
+     */
     //find all book
     public ResponseEntity<?> getAll(Pagination pagination) {
         Pageable paginate = Comm.getPaginate(pagination);
@@ -90,12 +98,21 @@ public class BookService {
         return Response.successList(page);
     }
 
+    /**
+     * @param pagination pagination
+     * @return ResponseEntity<?>
+     */
     public ResponseEntity<?> getAllOrderById(Pagination pagination) {
         Pageable paginate = Comm.getPaginate(pagination);
         Page<Book> page = bookRepository.findAllByOrderByIdDesc(paginate);
         return Response.successList(page);
     }
 
+    /**
+     * @param type      bookType
+     * @param pagination  pagination
+     * @return ResponseEntity<?>
+     */
     public ResponseEntity<?>getAllByType(String type,Pagination pagination){
         if (Objects.isNull(type)) {
             log.info("[book] bookType is null! {}", type);
