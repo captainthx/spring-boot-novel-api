@@ -8,14 +8,20 @@ import lombok.ToString;
 import javax.persistence.*;
 
 @EqualsAndHashCode(callSuper = true)
-@Entity(name = "address")
+@Entity(name = "delivery")
 @Data
-public class Address extends BaseEntity{
-    private String line1;
-    private String line2;
-    private String zipCode;
+public class Delivery extends BaseEntity{
+    @Column(nullable = false,length = 50)
+    private String fullName;
+    @Lob
+    @Column(nullable = false)
+    private String address;
+    @Column(length = 10, nullable = false)
+    private Integer phone;
+
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ToString.Exclude
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
     @Column(name = "user_id", insertable = false, updatable = false)

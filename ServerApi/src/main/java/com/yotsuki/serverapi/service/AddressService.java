@@ -51,11 +51,11 @@ public class AddressService {
             return Response.error(ResponseCode.ADDRESS_FULL);
         }
         //set foreign key
-        User userOptional = new User();
-        userOptional.setId(userDetailsImp.getId());
+        User user = new User();
+        user.setId(userDetailsImp.getId());
         //save to entity
         Address entity = new Address();
-        entity.setUser(userOptional);
+        entity.setUser(user);
         entity.setLine1(request.getLine1());
         entity.setLine2(request.getLine2());
         entity.setZipCode(request.getZipCode());

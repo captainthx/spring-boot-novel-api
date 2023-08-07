@@ -27,11 +27,6 @@ public class OrderService {
     }
 
 
-    /**
-     * @param userDetailsImp user details
-     * @param request        request
-     * @return response
-     */
 //    public ResponseEntity<?> create(UserDetailsImp userDetailsImp, OrderRequest request) {
 //
 //        if (Objects.isNull(request.getBookId())) {
@@ -72,15 +67,11 @@ public class OrderService {
 //        return Response.success(response(resOrder));
 //    }
 
-    /**
-     * @param userDetailsImp user details
-     * @param request        orderList
-     * @return
-     */
+
     public ResponseEntity<?> create(UserDetailsImp userDetailsImp, OrderListRequest request) {
 
         if (Objects.isNull(request.getOrders())) {
-            log.warn("order::(block) invalid orders:{}, udi:{}  ", request, userDetailsImp.getId());
+            log.warn("order::(block) invalid orders:{}, uid:{}  ", request, userDetailsImp.getId());
             return Response.error(ResponseCode.INVALID_ORDER_LIST);
         }
 
@@ -102,21 +93,23 @@ public class OrderService {
         return Response.success();
     }
 
-
-    /**
-     * @param userDetailsImp user details
-     * @param status         order status
-     * @return response
-     */
     public ResponseEntity<?> getOrderByUid(UserDetailsImp userDetailsImp, String status) {
         if (Objects.isNull(status)) {
-            log.warn("order::(block) invalid status:{}, udi:{}  ", status, userDetailsImp.getId());
+            log.warn("order::(block) invalid status:{}, uid:{}  ", status, userDetailsImp.getId());
             return Response.error(ResponseCode.INVALID_STATUS);
         }
         List<OrderResponse> orderList = this.orderRepository.findByUidAndStatus(userDetailsImp.getId(), status).stream().map(this::response).collect(Collectors.toList());
         return Response.success(orderList);
     }
 
+    public ResponseEntity<?> updateOrderStatus(UserDetailsImp userDetailsImp) {
+        List<Order> orderList = this.orderRepository.findByUid(userDetailsImp.getId()).stream().map(orders ->{
+            orders.setStatus("paid");
+            return orders;
+        }).collect(Collectors.toList());
+        this.orderRepository.saveAll(orderList);
+        return Response.success();
+    }
 
     public OrderResponse response(Order order) {
         return OrderResponse.builder()

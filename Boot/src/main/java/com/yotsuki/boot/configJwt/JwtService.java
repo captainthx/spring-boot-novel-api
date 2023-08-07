@@ -48,7 +48,7 @@ public class JwtService {
         JwtClaimsSet claim = JwtClaimsSet.builder()
                 .issuer(this.issuer)
                 .issuedAt(now)
-                .expiresAt(expiresAt)
+                .expiresAt(now.plusMillis(expiresAt.toEpochMilli()))
                 .subject(authentication.getUsername())
                 .claim("id",authentication.getId())
                 .build();

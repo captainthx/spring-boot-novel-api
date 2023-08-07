@@ -26,7 +26,10 @@ public enum ResponseCode {
     INVALID_STATUS(229),
     INVALID_BOOK_QUANTITY(230),
     INVALID_ORDER_LIST(231),
-    ADDRESS_FULL(230),
+    ADDRESS_FULL(232),
+    INVALID_FULL_NAME(233),
+    INVALID_PHONE(234),
+    INVALID_ADDRESS_ID(235),
     EXISTED_EMAIL(310),
     EXISTED_USERNAME(311),
     MAX_IMAGE_SIZE(312),
@@ -36,7 +39,9 @@ public enum ResponseCode {
     REFRESH_TOKEN_EXPIRE(511),
 
     UNAUTHORIZED(888),
-    UNKNOWN(999);
+    UNKNOWN(999),
+
+    ;
 
 
     private final Integer value;

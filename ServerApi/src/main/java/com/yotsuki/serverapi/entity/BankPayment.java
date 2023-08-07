@@ -6,15 +6,17 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.*;
-
 @EqualsAndHashCode(callSuper = true)
-@Entity(name = "address")
+@Entity(name = "bank_payment")
 @Data
-public class Address extends BaseEntity{
-    private String line1;
-    private String line2;
-    private String zipCode;
+public class BankPayment extends BaseEntity{
+    private String nameAccount;
+    private Long transferDate;
+    private String slipName;
+    private String status;
+
     @JsonIgnore
+    @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
