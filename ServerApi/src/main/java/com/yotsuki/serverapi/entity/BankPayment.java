@@ -13,7 +13,6 @@ public class BankPayment extends BaseEntity{
     private String nameAccount;
     private Long transferDate;
     private String slipName;
-    private String status;
 
     @JsonIgnore
     @ToString.Exclude

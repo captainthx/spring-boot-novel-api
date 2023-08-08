@@ -20,15 +20,15 @@ public class OrderApi {
     }
 
 
-    //Todo: create order with list book
+
     @PostMapping()
     public ResponseEntity<?> create(@AuthenticationPrincipal UserDetailsImp userDetailsImp, @RequestBody OrderListRequest request){
         return orderService.create(userDetailsImp,request);
     }
 
-    @GetMapping("/{status}")
-    public ResponseEntity<?> findOrderByUid(@AuthenticationPrincipal UserDetailsImp userDetailsImp,@PathVariable String status){
-        return orderService.getOrderByUid(userDetailsImp,status);
+    @GetMapping()
+    public ResponseEntity<?> findOrderByUid(@AuthenticationPrincipal UserDetailsImp userDetailsImp){
+        return orderService.getOrderByUid(userDetailsImp);
     }
 
     // update orderstatus

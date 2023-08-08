@@ -74,7 +74,6 @@ public class BackPaymentService {
         entity.setSlipName(fileName);
         entity.setTransferDate(request.getTransferDate());
         entity.setUser(User.getUser(userDetailsImp));
-        entity.setStatus("pending");
         this.bankPaymentRepository.save(entity);
 
         return Response.success();
@@ -92,7 +91,6 @@ public class BackPaymentService {
         return HistoryPaymentResponse.builder()
                 .id(bankPayment.getId())
                 .transferDate(bankPayment.getTransferDate())
-                .status(bankPayment.getStatus())
                 .cdt(bankPayment.getCdt())
                 .build();
     }

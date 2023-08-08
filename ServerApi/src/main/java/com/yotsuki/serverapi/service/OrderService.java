@@ -27,54 +27,12 @@ public class OrderService {
     }
 
 
-//    public ResponseEntity<?> create(UserDetailsImp userDetailsImp, OrderRequest request) {
-//
-//        if (Objects.isNull(request.getBookId())) {
-//            log.warn("order::(block) invalid bookId:{}, udi:{} ", request, userDetailsImp.getId());
-//            return Response.error(ResponseCode.INVALID_BOOK_ID);
-//        }
-//        if (Objects.isNull(request.getName())) {
-//            log.warn("order::(block) invalid name:{}, udi:{}  ", request, userDetailsImp.getId());
-//            return Response.error(ResponseCode.INVALID_BOOK_NAME);
-//        }
-//        if (Objects.isNull(request.getPrice())) {
-//            log.warn("order::(block) invalid price:{}, udi:{}  ", request, userDetailsImp.getId());
-//            return Response.error(ResponseCode.INVALID_BOOK_PRICE);
-//        }
-//        if (Objects.isNull(request.getQuantity())) {
-//            log.warn("order::(block) invalid quantity:{}, udi:{}  ", request, userDetailsImp.getId());
-//            return Response.error(ResponseCode.INVALID_BOOK_QUANTITY);
-//        }
-//        if (Objects.isNull(request.getStatus())) {
-//            log.warn("order::(block) invalid status:{}, udi:{}  ", request, userDetailsImp.getId());
-//            return Response.error(ResponseCode.INVALID_STATUS);
-//        }
-//        //set foreign key
-//        User userOptional = new User();
-//        userOptional.setId(userDetailsImp.getId());
-//        //save to entity
-//        Order entity = new Order();
-//        entity.setUser(userOptional);
-//        entity.setBookId(request.getBookId());
-//        entity.setName(request.getName());
-//        entity.setPrice(request.getPrice());
-//        entity.setQuantity(request.getQuantity());
-//        entity.setStatus(request.getStatus());
-//
-//        //save to db
-//        Order resOrder = orderRepository.save(entity);
-//
-//        return Response.success(response(resOrder));
-//    }
-
-
     public ResponseEntity<?> create(UserDetailsImp userDetailsImp, OrderListRequest request) {
 
         if (Objects.isNull(request.getOrders())) {
             log.warn("order::(block) invalid orders:{}, uid:{}  ", request, userDetailsImp.getId());
             return Response.error(ResponseCode.INVALID_ORDER_LIST);
         }
-
         List<Order> orders = request.getOrders().stream().map(order -> {
             User user = new User();
             user.setId(userDetailsImp.getId());
@@ -93,12 +51,8 @@ public class OrderService {
         return Response.success();
     }
 
-    public ResponseEntity<?> getOrderByUid(UserDetailsImp userDetailsImp, String status) {
-        if (Objects.isNull(status)) {
-            log.warn("order::(block) invalid status:{}, uid:{}  ", status, userDetailsImp.getId());
-            return Response.error(ResponseCode.INVALID_STATUS);
-        }
-        List<OrderResponse> orderList = this.orderRepository.findByUidAndStatus(userDetailsImp.getId(), status).stream().map(this::response).collect(Collectors.toList());
+    public ResponseEntity<?> getOrderByUid(UserDetailsImp userDetailsImp) {
+        List<OrderResponse> orderList = this.orderRepository.findByUid(userDetailsImp.getId()).stream().map(this::response).collect(Collectors.toList());
         return Response.success(orderList);
     }
 
