@@ -4,10 +4,12 @@ import com.yotsuki.boot.configJwt.UserDetailsImp;
 import com.yotsuki.excommon.common.Response;
 import com.yotsuki.excommon.common.ResponseCode;
 import com.yotsuki.serverapi.entity.BankPayment;
+import com.yotsuki.serverapi.entity.Order;
 import com.yotsuki.serverapi.entity.User;
 import com.yotsuki.serverapi.model.request.BankPaymentRequest;
 import com.yotsuki.serverapi.model.response.HistoryPaymentResponse;
 import com.yotsuki.serverapi.repository.BankPaymentRepository;
+import com.yotsuki.serverapi.repository.OrderRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -28,11 +30,15 @@ import java.util.stream.Collectors;
 @Slf4j
 public class BackPaymentService {
     private final BankPaymentRepository bankPaymentRepository;
+    private final OrderService orderService;
+    private final OrderRepository orderRepository;
     private final String imgPath = "C:/api/img/slip";
 
     //    private final String imgPath = "/npm/api/img/" ;
-    public BackPaymentService(BankPaymentRepository bankPaymentRepository) {
+    public BackPaymentService(BankPaymentRepository bankPaymentRepository, OrderService orderService, OrderRepository orderRepository) {
         this.bankPaymentRepository = bankPaymentRepository;
+        this.orderService = orderService;
+        this.orderRepository = orderRepository;
     }
 
     // create transaction
@@ -76,6 +82,12 @@ public class BackPaymentService {
         entity.setUser(User.getUser(userDetailsImp));
         this.bankPaymentRepository.save(entity);
 
+        // update book order status
+        List<Order> orderList = this.orderRepository.findByUid(userDetailsImp.getId()).stream().map(orders -> {
+            orders.setStatus("paid");
+            return orders;
+        }).collect(Collectors.toList());
+        this.orderRepository.saveAll(orderList);
         return Response.success();
     }
 
@@ -87,13 +99,14 @@ public class BackPaymentService {
     }
 
 
-    private HistoryPaymentResponse build(BankPayment bankPayment){
+    private HistoryPaymentResponse build(BankPayment bankPayment) {
         return HistoryPaymentResponse.builder()
                 .id(bankPayment.getId())
                 .transferDate(bankPayment.getTransferDate())
                 .cdt(bankPayment.getCdt())
                 .build();
     }
+
     private void initDirectory() {
         File dir = new File(this.imgPath);
         if (!dir.exists()) {
